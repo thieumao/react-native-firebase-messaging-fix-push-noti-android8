@@ -1,18 +1,14 @@
 {
-  "name": "@react-native-firebase/messaging",
-  "version": "7.2.1",
+  "name": "react-native-firebase-messaging-fix-push-noti-android8",
+  "version": "7.2.2",
   "author": "Invertase <oss@invertase.io> (http://invertase.io)",
   "description": "React Native Firebase - React Native Firebase provides native integration of Firebase Cloud Messaging (FCM) for both Android & iOS. FCM is a cost free service, allowing for server-device and device-device communication. The React Native Firebase Messaging module provides a simple JavaScript API to interact with FCM.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "scripts": {
-    "build": "genversion --semi lib/version.js",
-    "build:clean": "rimraf android/build && rimraf ios/build",
-    "prepare": "yarn run build"
-  },
+  "scripts": {},
   "repository": {
-    "type": "git",
-    "url": "https://github.com/invertase/react-native-firebase/tree/master/packages/messaging"
+    "url": "git+ssh://git@github.com:thieumao/react-native-firebase-messaging-fix-push-noti-android8.git",
+    "type": "git"
   },
   "license": "Apache-2.0",
   "keywords": [
@@ -26,5 +22,10 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
   }
 }
