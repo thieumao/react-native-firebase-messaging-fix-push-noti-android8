@@ -47,7 +47,16 @@ public class ReactNativeFirebaseMessagingReceiver extends BroadcastReceiver {
     try {
       Intent backgroundIntent = new Intent(context, ReactNativeFirebaseMessagingHeadlessService.class);
       backgroundIntent.putExtra("message", remoteMessage);
-      ComponentName name = context.startService(backgroundIntent);
+      // ComponentName name = context.startService(backgroundIntent);
+
+      // START: Fix bug push notification on Android 8 when Quit App
+      ComponentName name;
+      if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+        name = context.startForegroundService(backgroundIntent);
+      } else {
+        name = context.startService(backgroundIntent);
+      }
+      // End: Fix bug push notification on Android 8 when Quit App
 
       if (name != null) {
         HeadlessJsTaskService.acquireWakeLockNow(context);

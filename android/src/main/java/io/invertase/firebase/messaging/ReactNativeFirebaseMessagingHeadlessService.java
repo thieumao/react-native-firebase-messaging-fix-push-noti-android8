@@ -14,6 +14,41 @@ public class ReactNativeFirebaseMessagingHeadlessService extends HeadlessJsTaskS
   private static final String TIMEOUT_JSON_KEY = "messaging_android_headless_task_timeout";
   private static final String TASK_KEY = "ReactNativeFirebaseMessagingHeadlessTask";
 
+  // START: Fix bug push notification on Android 8 when Quit App
+  public static String getMetadata(Context context, String name) {
+    try {
+      ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(
+        context.getPackageName(), PackageManager.GET_META_DATA);
+      if (appInfo.metaData != null) {
+        return appInfo.metaData.getString(name);
+      }
+    } catch (PackageManager.NameNotFoundException e) {
+      // if we can’t find it in the manifest, just return empty
+    }
+
+    return "";
+  }
+
+  @Override
+  public void onCreate() {
+    super.onCreate();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      String CHANNEL_ID = getMetadata(this, "com.google.firebase.messaging.default_notification_channel_id");
+      String CHANNEL_NAME = CHANNEL_ID;
+      NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+        CHANNEL_NAME,
+        NotificationManager.IMPORTANCE_DEFAULT);
+
+      ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+
+      Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+        .setContentTitle("")
+        .setContentText("").build();
+      this.startForeground(1, notification);
+    }
+  }
+  // END: Fix bug push notification on Android 8 when Quit App
+
   @Override
   protected @Nullable
   HeadlessJsTaskConfig getTaskConfig(Intent intent) {
